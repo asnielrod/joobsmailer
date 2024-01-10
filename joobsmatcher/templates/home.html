@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if user.is_authenticated %}
+    <div class="col-md-6 offset-md-3">
+        <br/><br/><br/>
+        <h1>Recomendaciones de Trabajos</h1>
+        {% if recommendations %}
+            <ul>
+                {% for rec in recommendations %}
+                    <li>{{ rec.job.job_title }}</li>
+                    <li>{{ rec.job.job_description}}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No hay recomendaciones para ti en estos momentos.</p>
+        {% endif %}
+    </div>
+{% else %}
+    <div class="col-md-6 offset-md-3">
+        <br/>
+        <br/>
+        <br/>
+        <h1>JobsMailer</h1>
+        <br/>
+        <p>JobsMailer is a job recommendation system powered by artificial intelligence. It recommends jobs to users based on their skills and interests, utilizing advanced algorithms to match individuals with suitable employment opportunities.</p>
+        <br/>
+        <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+        <p>You don't have an account? <a href="{% url 'register' %}">Register</a></p>
+    </div>
+{% endif %}
+{% endblock %}
