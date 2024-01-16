@@ -4,6 +4,7 @@ from django.contrib import messages
 from .forms import SignUpForm
 from .models import JobRecommendations, Developer, JobPosting
 from django.contrib.auth import get_user_model
+from .models import ProgrammingLanguage, Framework, ToolSystem, DatabaseKnowledge, Developer, Employer
 
 User = get_user_model()
 
@@ -69,14 +70,14 @@ def home(request):
     return render(request, 'home.html', context)
 
 
-#completar el prtfil de desarrollador
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from .models import ProgrammingLanguage, Framework, ToolSystem, DatabaseKnowledge, Developer
+
 
 def complete_developer_profile(request):
     if request.method == 'POST':
-        developer = request.user.developer
+        user = request.user
+        developer, created = Developer.objects.get_or_create(user=user)
+
+        # Actualizar o crear campos del perfil del desarrollador
         developer.email = request.POST['email']
         developer.location = request.POST['location']
         developer.linkedin_url = request.POST['linkedin_url']
@@ -95,16 +96,15 @@ def complete_developer_profile(request):
         developer.availability_date = request.POST['availability_date']
         developer.additional_comments = request.POST['additional_comments']
 
-        # Actualizar campos ManyToMany
         programming_languages = request.POST.getlist('programming_languages')
         frameworks = request.POST.getlist('frameworks')
         tools_systems = request.POST.getlist('tools_systems')
         database_knowledge = request.POST.getlist('database_knowledge')
 
-        developer.programming_languages.set(programming_languages)
-        developer.frameworks.set(frameworks)
-        developer.tools_systems.set(tools_systems)
-        developer.database_knowledge.set(database_knowledge)
+        developer.programming_languages.set(ProgrammingLanguage.objects.filter(id__in=programming_languages))
+        developer.frameworks.set(Framework.objects.filter(id__in=frameworks))
+        developer.tools_systems.set(ToolSystem.objects.filter(id__in=tools_systems))
+        developer.database_knowledge.set(DatabaseKnowledge.objects.filter(id__in=database_knowledge))
 
         developer.save()
         messages.success(request, "Your Profile Has Been Updated!")
@@ -116,25 +116,37 @@ def complete_developer_profile(request):
             'tools_systems': ToolSystem.objects.all(),
             'database_knowledge': DatabaseKnowledge.objects.all(),
             'username': request.user.username,
-        }
+            }
         return render(request, 'complete_developer_profile.html', context)
-    
+
     return render(request, 'complete_developer_profile.html', {})
+
+
 
     
 def complete_employer_profile(request):
     if request.method == 'POST':
-        employer = request.user.employer
+        user = request.user
+        employer, created = Employer.objects.get_or_create(user=user)
+
+        # Actualizar o crear campos del perfil del empleador
         employer.name = request.POST['name']
         employer.email = request.POST['email']
-        employer.location = request.POST['location']
-        employer.linkedin_url = request.POST['linkedin_url']
-        employer.company_name = request.POST['company_name']
-        employer.industry = request.POST['industry']
-        employer.company_size = request.POST['company_size']
-        employer.company_description = request.POST['company_description']
+        employer.location = request.POST.get('location', '')  # Uso de .get con un valor por defecto
+        employer.linkedin_url = request.POST.get('linkedin_url', '')
+        employer.company_name = request.POST.get('company_name', '')
+        employer.industry = request.POST.get('industry', '')
+        employer.company_size = request.POST.get('company_size', '')
+        employer.company_description = request.POST.get('company_description', '')
+
         employer.save()
         messages.success(request, "Your Profile Has Been Updated!")
         return redirect('home')
+
+    # Directamente renderizar el formulario de perfil para solicitudes GET
     return render(request, 'complete_employer_profile.html', {})
+
+
+def some_error_handling_view(request):
+    return render(request, 'home.html', {})
 

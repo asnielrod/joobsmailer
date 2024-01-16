@@ -1,8 +1,114 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block content %} {% if user.is_authenticated %}
+<form method="post" class="container mt-4">
+  {% csrf_token %}
 
-{% block content %}
-<h1>Complete developer profile</h1>
+  <script>
+    function showSection(sectionNumber) {
+      for (let i = 1; i <= 2; i++) {
+        document.getElementById("section" + i).style.display = "none";
+      }
+      document.getElementById("section" + sectionNumber).style.display =
+        "block";
+    }
+  </script>
 
-{% endblock %}
+  <!-- Sección 1: Información Básica -->
+  <div id="section1" class="col-md-6 offset-md-3">
+    <h3>Información Básica</h3>
+    <div class="form-group">
+      <p>
+        Hola {{ user.username }}! Por favor rellena este formulario para
+        conectarte con los mejores candidatos.
+      </p>
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" class="form-control" required />
+      <br />
+      <label for="email">Contact Email:</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        class="form-control"
+        required
+      />
+      <br />
+      <label for="location">Ubicación:</label>
+      <input
+        type="text"
+        id="location"
+        name="location"
+        class="form-control"
+        required
+      />
+      <br />
+      <label for="linkedin_url">LinkedIn URL (opcional):</label>
+      <input
+        type="url"
+        id="linkedin_url"
+        name="linkedin_url"
+        class="form-control"
+      />
+    </div>
+    <br />
+    <button type="button" class="btn btn-primary" onclick="showSection(2)">
+      Siguiente
+    </button>
+  </div>
 
-
+  <!-- Sección 2: Información de la Empresa -->
+  <div id="section2" style="display: none" class="col-md-6 offset-md-3">
+    <h3>Información de la Empresa</h3>
+    <div class="form-group">
+      <label for="company_name">Company Name:</label>
+      <input
+        type="text"
+        id="company_name"
+        name="company_name"
+        class="form-control"
+        required
+      />
+      <br />
+      <label for="industry">Industry:</label>
+      <input
+        type="text"
+        id="industry"
+        name="industry"
+        class="form-control"
+        required
+      />
+      <br />
+      <label for="company_size">Company Size:</label>
+      <input
+        type="text"
+        id="company_size"
+        name="company_size"
+        class="form-control"
+        required
+      />
+      <br />
+      <label for="company_description">Company Description:</label>
+      <textarea
+        id="company_description"
+        name="company_description"
+        class="form-control"
+        required
+      ></textarea>
+      <br />
+      <button type="button" class="btn btn-secondary" onclick="showSection(1)">
+        Atrás
+      </button>
+      <input type="submit" value="Enviar" class="btn btn-success" />
+    </div>
+  </div>
+</form>
+<script>
+  // Asegúrese de que jQuery esté incluido en 'base.html'
+  $(".btn-group-toggle label").on("click", function () {
+    $(this).button("toggle");
+  });
+</script>
+{% else %}
+<h1>Por favor, inicia sesión para completar tu perfil.</h1>
+<a href="{% url 'login' %}">Iniciar sesión</a>
+<a href="{% url 'register' %}">Registrarse</a>
+{% endif %} {% endblock %}

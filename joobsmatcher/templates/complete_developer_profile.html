@@ -2,10 +2,7 @@
 
 {% block content %}
 {% if user.is_authenticated %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
+
     <title>Complete Developer Profile</title>
     <script>
         function showSection(sectionNumber) {
@@ -15,106 +12,154 @@
             document.getElementById("section" + sectionNumber).style.display = "block";
         }
     </script>
-</head>
+
 <body>
 
-<form method="post">
+<form method="post" class="container mt-4">
     {% csrf_token %}
 
     <!-- Sección 1: Información Básica -->
-    <div id="section1">
+    <div id="section1" class="col-md-6 offset-md-3">
         <h3>Información Básica</h3>
-        <p>Nombre de Usuario: {{ username }}</p>
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email"><br>
-        <label for="location">Ubicación:</label>
-        <input type="text" id="location" name="location"><br>
-        <label for="linkedin_url">LinkedIn URL:</label>
-        <input type="url" id="linkedin_url" name="linkedin_url"><br>
-        <button type="button" onclick="showSection(2)">Siguiente</button>
+        <div class="form-group">
+            <p>Hola {{ username }}! Por favor rellena este formulario para que nuestra inteligencia artificial te ayude a encontrar ofertas de empleo que corrdinen con tu perfil</p>
+            <label for="email">Contact Email:</label>
+            <input type="email" id="email" name="email" class="form-control">
+            <br/>
+            <label for="location">Ubicación:</label>
+            <input type="text" id="location" name="location" class="form-control">
+            <br/>
+            <label for="linkedin_url">LinkedIn URL:</label>
+            <input type="text" id="linkedin_url" name="linkedin_url" class="form-control">
+        </div>
+        <br/>
+        <button type="button" class="btn btn-primary" onclick="showSection(2)">Siguiente</button>
     </div>
 
     <!-- Sección 2: Experiencia y Educación -->
-    <div id="section2" style="display:none;">
+    <div id="section2" style="display:none;" class="col-md-6 offset-md-3">
         <h3>Experiencia y Educación</h3>
-        <label for="programming_languages">Lenguajes de Programación:</label>
-        <select id="programming_languages" name="programming_languages" multiple>
+        <p>Lenguajes de programación:</p>
+        <div class="btn-group-toggle" data-toggle="buttons">
             {% for language in programming_languages %}
-            <option value="{{ language.id }}">{{ language.name }}</option>
+            <label class="btn btn-outline-primary" style="margin-top: 10px;">
+                <input type="checkbox" autocomplete="off" value="{{ language.id }}"> {{ language.name }}
+            </label>
             {% endfor %}
-        </select><br>
-        <label for="frameworks">Frameworks:</label>
-        <select id="frameworks" name="frameworks" multiple>
+        </div>
+        <br/>
+        <p>Frameworks:</p>
+        <div class="btn-group-toggle" data-toggle="buttons">
             {% for framework in frameworks %}
-            <option value="{{ framework.id }}">{{ framework.name }}</option>
+            <label class="btn btn-outline-primary" style="margin-top: 10px;">
+                <input type="checkbox" autocomplete="off" value="{{ framework.id }}"> {{ framework.name }}
+            </label>
             {% endfor %}
-        </select><br>
-        <label for="tools_systems">Herramientas y Sistemas:</label>
-        <select id="tools_systems" name="tools_systems" multiple>
+        </div>
+        <br/>
+        <p>Herramientas y Sistemas:</p>
+        <div class="btn-group-toggle" data-toggle="buttons">
             {% for tool in tools_systems %}
-            <option value="{{ tool.id }}">{{ tool.name }}</option>
+            <label class="btn btn-outline-primary" style="margin-top: 10px;">
+                <input type="checkbox" autocomplete="off" value="{{ tool.id }}"> {{ tool.name }}
+            </label>
             {% endfor %}
-        </select><br>
-        <label for="database_knowledge">Conocimientos de Bases de Datos:</label>
-        <select id="database_knowledge" name="database_knowledge" multiple>
+        </div>
+        <br/>
+        <p>Conocimientos de Bases de Datos:</p>
+        <div class="btn-group-toggle" data-toggle="buttons">
             {% for database in database_knowledge %}
-            <option value="{{ database.id }}">{{ database.name }}</option>
+            <label class="btn btn-outline-primary" style="margin-top: 10px;">
+                <input type="checkbox" autocomplete="off" value="{{ database.id }}"> {{ database.name }}
+            </label>
             {% endfor %}
-        </select><br>
-        <button type="button" onclick="showSection(1)">Atrás</button>
-        <button type="button" onclick="showSection(3)">Siguiente</button>
+        </div>
+        <br/>
+        <button type="button" class="btn btn-secondary" onclick="showSection(1)">Atrás</button>
+        <button type="button" class="btn btn-primary" onclick="showSection(3)">Siguiente</button>
     </div>
 
     <!-- Sección 3: Habilidades y Preferencias de Trabajo -->
-    <div id="section3" style="display:none;">
+    <div id="section3" style="display:none;" class="col-md-6 offset-md-3">
+        <br/>
         <h3>Habilidades y Preferencias de Trabajo</h3>
-        <label for="years_of_experience">Años de Experiencia:</label>
-        <input type="number" id="years_of_experience" name="years_of_experience"><br>
-        <label for="project_types">Tipos de Proyectos:</label>
-        <input type="text" id="project_types" name="project_types"><br>
-        <label for="previous_roles">Roles Anteriores:</label>
-        <input type="text" id="previous_roles" name="previous_roles"><br>
-        <label for="highest_degree">Grado Académico Más Alto:</label>
-        <input type="text" id="highest_degree" name="highest_degree"><br>
-        <button type="button" onclick="showSection(2)">Atrás</button>
-        <button type="button" onclick="showSection(4)">Siguiente</button>
+        <div class="form-group">
+            <label for="years_of_experience">Años de Experiencia:</label>
+            <input type="number" id="years_of_experience" name="years_of_experience" class="form-control">
+            <br/>
+            <label for="project_types">Tipos de Proyectos:</label>
+            <input type="text" id="project_types" name="project_types" class="form-control">
+            <br/>
+            <label for="previous_roles">Roles Anteriores:</label>
+            <input type="text" id="previous_roles" name="previous_roles" class="form-control">
+            <br/>
+            <label for="highest_degree">Grado Académico Más Alto:</label>
+            <input type="text" id="highest_degree" name="highest_degree" class="form-control">
+        </div>
+        <br/>
+        <button type="button" class="btn btn-secondary" onclick="showSection(2)">Atrás</button>
+        <button type="button" class="btn btn-primary" onclick="showSection(4)">Siguiente</button>
     </div>
 
     <!-- Sección 4: Detalles Adicionales -->
-    <div id="section4" style="display:none;">
+    <div id="section4" style="display:none;" class="col-md-6 offset-md-3">
+        <br/>
         <h3>Detalles Adicionales</h3>
-        <label for="certifications">Certificaciones:</label>
-        <input type="text" id="certifications" name="certifications"><br>
-        <label for="job_type">Tipo de Trabajo:</label>
-        <input type="text" id="job_type" name="job_type"><br>
-        <label for="remote_availability">Disponibilidad Remota:</label>
-        <input type="checkbox" id="remote_availability" name="remote_availability"><br>
-        <label for="relocation_interest">Interés en Relocalización:</label>
-        <input type="checkbox" id="relocation_interest" name="relocation_interest"><br>
-        <label for="desired_salary_range">Rango Salarial Deseado:</label>
-        <input type="text" id="desired_salary_range" name="desired_salary_range"><br>
-        <button type="button" onclick="showSection(3)">Atrás</button>
-        <button type="button" onclick="showSection(5)">Siguiente</button>
+        <div class="form-group">
+            <br/>
+            <label for="certifications">Certificaciones:</label>
+            <input type="text" id="certifications" name="certifications" class="form-control">
+            <br/>
+            <label for="job_type">Tipo de Trabajo:</label>
+            <input type="text" id="job_type" name="job_type" class="form-control">
+            <br/>
+            <label for="remote_availability">Disponibilidad Remota:</label>
+            <input type="checkbox" id="remote_availability" name="remote_availability" class="form-check-input">
+            <br/>
+            <br/>
+            <label for="relocation_interest">Interés en Relocalización:</label>
+            <input type="checkbox" id="relocation_interest" name="relocation_interest" class="form-check-input">
+            <br/>
+            <br/>
+            <label for="desired_salary_range">Rango Salarial Deseado:</label>
+            <input type="text" id="desired_salary_range" name="desired_salary_range" class="form-control">
+        </div>
+        <br/>
+        <button type="button" class="btn btn-secondary" onclick="showSection(3)">Atrás</button>
+        <button type="button" class="btn btn-primary" onclick="showSection(5)">Siguiente</button>
     </div>
 
     <!-- Sección 5: Idiomas, Habilidades Blandas y Más -->
-    <div id="section5" style="display:none;">
+    <div id="section5" style="display:none;" class="col-md-6 offset-md-3">
         <h3>Idiomas, Habilidades Blandas y Más</h3>
-        <label for="languages_spoken">Idiomas Hablados:</label>
-        <input type="text" id="languages_spoken" name="languages_spoken"><br>
-        <label for="soft_skills">Habilidades Blandas:</label>
-        <input type="text" id="soft_skills" name="soft_skills"><br>
-        <label for="professional_interests">Intereses Profesionales:</label>
-        <input type="text" id="professional_interests" name="professional_interests"><br>
-        <label for="availability_date">Fecha de Disponibilidad:</label>
-        <input type="date" id="availability_date" name="availability_date"><br>
-        <label for="additional_comments">Comentarios Adicionales:</label>
-        <input type="text" id="additional_comments" name="additional_comments"><br>
-        <button type="button" onclick="showSection(4)">Atrás</button>
-        <input type="submit" value="Enviar">
+        <div class="form-group">
+            <br/>
+            <label for="languages_spoken">Idiomas Hablados:</label>
+            <input type="text" id="languages_spoken" name="languages_spoken" class="form-control">
+            <br/>
+            <label for="soft_skills">Habilidades Blandas:</label>
+            <input type="text" id="soft_skills" name="soft_skills" class="form-control">
+            <br/>
+            <label for="professional_interests">Intereses Profesionales:</label>
+            <input type="text" id="professional_interests" name="professional_interests" class="form-control">
+            <br/>
+            <label for="availability_date">Fecha de Disponibilidad:</label>
+            <input type="date" id="availability_date" name="availability_date" class="form-control">
+            <br/>
+            <label for="additional_comments">Comentarios Adicionales:</label>
+            <input type="text" id="additional_comments" name="additional_comments" class="form-control">
+        </div>
+        <br/>
+        <button type="button" class="btn btn-secondary" onclick="showSection(4)">Atrás</button>
+        <input type="submit" value="Enviar" class="btn btn-success">
     </div>
 
 </form>
+<script>
+    $('.btn-group-toggle label').on('click', function() {
+        $(this).button('toggle');
+    });
+</script>
 
 </body>
 </html>

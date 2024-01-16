@@ -80,7 +80,7 @@ class Developer(models.Model):
     additional_comments = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return self.name
+        return f'Nombre: {self.name} Email: ({self.email}) Tipo de trabajo: {self.job_type}'
 
 class JobPosting(models.Model):
     company_name = models.CharField(max_length=100)
