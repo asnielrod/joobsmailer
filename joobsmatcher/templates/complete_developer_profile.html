@@ -3,15 +3,15 @@
 {% block content %}
 {% if user.is_authenticated %}
 
-    <title>Complete Developer Profile</title>
-    <script>
-        function showSection(sectionNumber) {
-            for (let i = 1; i <= 5; i++) {
-                document.getElementById("section" + i).style.display = "none";
-            }
-            document.getElementById("section" + sectionNumber).style.display = "block";
+<title>Complete Developer Profile</title>
+<script>
+    function showSection(sectionNumber) {
+        for (let i = 1; i <= 5; i++) {
+            document.getElementById("section" + i).style.display = "none";
         }
-    </script>
+        document.getElementById("section" + sectionNumber).style.display = "block";
+    }
+</script>
 
 <body>
 
@@ -43,7 +43,7 @@
         <div class="btn-group-toggle" data-toggle="buttons">
             {% for language in programming_languages %}
             <label class="btn btn-outline-primary" style="margin-top: 10px;">
-                <input type="checkbox" autocomplete="off" value="{{ language.id }}"> {{ language.name }}
+                <input type="checkbox" name="programming_languages" value="{{ language.id }}" autocomplete="off"> {{ language.name }}
             </label>
             {% endfor %}
         </div>
@@ -52,7 +52,7 @@
         <div class="btn-group-toggle" data-toggle="buttons">
             {% for framework in frameworks %}
             <label class="btn btn-outline-primary" style="margin-top: 10px;">
-                <input type="checkbox" autocomplete="off" value="{{ framework.id }}"> {{ framework.name }}
+                <input type="checkbox" name="frameworks" value="{{ framework.id }}" autocomplete="off"> {{ framework.name }}
             </label>
             {% endfor %}
         </div>
@@ -61,7 +61,7 @@
         <div class="btn-group-toggle" data-toggle="buttons">
             {% for tool in tools_systems %}
             <label class="btn btn-outline-primary" style="margin-top: 10px;">
-                <input type="checkbox" autocomplete="off" value="{{ tool.id }}"> {{ tool.name }}
+                <input type="checkbox" name="tools_systems" value="{{ tool.id }}" autocomplete="off"> {{ tool.name }}
             </label>
             {% endfor %}
         </div>
@@ -70,7 +70,7 @@
         <div class="btn-group-toggle" data-toggle="buttons">
             {% for database in database_knowledge %}
             <label class="btn btn-outline-primary" style="margin-top: 10px;">
-                <input type="checkbox" autocomplete="off" value="{{ database.id }}"> {{ database.name }}
+                <input type="checkbox" name="database_knowledge" value="{{ database.id }}" autocomplete="off"> {{ database.name }}
             </label>
             {% endfor %}
         </div>
@@ -169,3 +169,4 @@
     <a href="{% url 'register' %}">Registrarse</a>
 {% endif %}
 {% endblock %}
+

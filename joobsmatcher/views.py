@@ -96,11 +96,13 @@ def complete_developer_profile(request):
         developer.availability_date = request.POST['availability_date']
         developer.additional_comments = request.POST['additional_comments']
 
+        # Para listas de selección múltiple como lenguajes de programación
         programming_languages = request.POST.getlist('programming_languages')
         frameworks = request.POST.getlist('frameworks')
         tools_systems = request.POST.getlist('tools_systems')
         database_knowledge = request.POST.getlist('database_knowledge')
 
+        # Configurando las relaciones many-to-many
         developer.programming_languages.set(ProgrammingLanguage.objects.filter(id__in=programming_languages))
         developer.frameworks.set(Framework.objects.filter(id__in=frameworks))
         developer.tools_systems.set(ToolSystem.objects.filter(id__in=tools_systems))
@@ -110,16 +112,19 @@ def complete_developer_profile(request):
         messages.success(request, "Your Profile Has Been Updated!")
         return redirect('home')
     else:
+        # Preparar el contexto para el formulario GET
         context = {
             'programming_languages': ProgrammingLanguage.objects.all(),
             'frameworks': Framework.objects.all(),
             'tools_systems': ToolSystem.objects.all(),
             'database_knowledge': DatabaseKnowledge.objects.all(),
             'username': request.user.username,
-            }
+        }
         return render(request, 'complete_developer_profile.html', context)
 
+    # Esto maneja un caso inusual donde el método no es ni POST ni GET
     return render(request, 'complete_developer_profile.html', {})
+
 
 
 
