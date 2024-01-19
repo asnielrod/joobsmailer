@@ -1,0 +1,21 @@
+{% extends "base.html" %} 
+
+{% block content %} 
+
+{% if user.is_authenticated %}
+
+
+<h1>
+    Your offers here
+</h1>
+
+{% else %}
+    <h1>
+        You need to be logged in to see this page
+    </h1>
+        <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+        <p>You don't have an account? <a href="{% url 'register' %}">Register</a></p>
+{% endif %}
+
+{% endblock content %}          
+

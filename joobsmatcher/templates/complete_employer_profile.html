@@ -41,9 +41,9 @@
         required
       />
       <br />
-      <label for="linkedin_url">LinkedIn URL (opcional):</label>
+      <label for="linkedin_url">LinkedIn URL:</label>
       <input
-        type="url"
+        type="text"
         id="linkedin_url"
         name="linkedin_url"
         class="form-control"
@@ -102,7 +102,6 @@
   </div>
 </form>
 <script>
-  // Asegúrese de que jQuery esté incluido en 'base.html'
   $(".btn-group-toggle label").on("click", function () {
     $(this).button("toggle");
   });

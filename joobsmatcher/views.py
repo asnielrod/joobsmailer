@@ -8,26 +8,25 @@ from .models import ProgrammingLanguage, Framework, ToolSystem, DatabaseKnowledg
 
 User = get_user_model()
 
-# views.py
+
 def register_user(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
-            user = form.save(commit=False)  # No guardamos todavía en la base de datos
+            user = form.save(commit=False)
             user_type = form.cleaned_data.get('user_type')
 
-            # Establece el tipo de usuario
             user.user_type = user_type
-            user.save()  # Ahora guardamos el usuario con el tipo establecido
-
-            # Iniciar sesión y redirigir
+            user.save()
+            if user_type == 'developer':
+                Developer.objects.create(user=user, email=user.email)
+            else:
+                Employer.objects.create(user=user, email=user.email)
             login(request, user)
             messages.success(request, 'You have been registered!')
 
-            # Redirigir a una página para completar el perfil según el tipo de usuario
             if user_type == 'developer':
                 return redirect('complete_developer_profile')
-            # Redirigin para completar tipo employer
             elif user_type == 'employer':
                 return redirect('complete_employer_profile')
         else:
@@ -75,9 +74,7 @@ def home(request):
 def complete_developer_profile(request):
     if request.method == 'POST':
         user = request.user
-        developer, created = Developer.objects.get_or_create(user=user)
-
-        # Actualizar o crear campos del perfil del desarrollador
+        developer = Developer.objects.get(user=user)
         developer.email = request.POST['email']
         developer.location = request.POST['location']
         developer.linkedin_url = request.POST['linkedin_url']
@@ -96,13 +93,11 @@ def complete_developer_profile(request):
         developer.availability_date = request.POST['availability_date']
         developer.additional_comments = request.POST['additional_comments']
 
-        # Para listas de selección múltiple como lenguajes de programación
         programming_languages = request.POST.getlist('programming_languages')
         frameworks = request.POST.getlist('frameworks')
         tools_systems = request.POST.getlist('tools_systems')
         database_knowledge = request.POST.getlist('database_knowledge')
 
-        # Configurando las relaciones many-to-many
         developer.programming_languages.set(ProgrammingLanguage.objects.filter(id__in=programming_languages))
         developer.frameworks.set(Framework.objects.filter(id__in=frameworks))
         developer.tools_systems.set(ToolSystem.objects.filter(id__in=tools_systems))
@@ -110,9 +105,8 @@ def complete_developer_profile(request):
 
         developer.save()
         messages.success(request, "Your Profile Has Been Updated!")
-        return redirect('home')
+        return redirect('home.html')
     else:
-        # Preparar el contexto para el formulario GET
         context = {
             'programming_languages': ProgrammingLanguage.objects.all(),
             'frameworks': Framework.objects.all(),
@@ -122,36 +116,52 @@ def complete_developer_profile(request):
         }
         return render(request, 'complete_developer_profile.html', context)
 
-    # Esto maneja un caso inusual donde el método no es ni POST ni GET
     return render(request, 'complete_developer_profile.html', {})
 
-
-
-
+  
     
 def complete_employer_profile(request):
     if request.method == 'POST':
         user = request.user
         employer, created = Employer.objects.get_or_create(user=user)
-
-        # Actualizar o crear campos del perfil del empleador
-        employer.name = request.POST['name']
-        employer.email = request.POST['email']
-        employer.location = request.POST.get('location', '')  # Uso de .get con un valor por defecto
+        employer.name = request.POST.get('name')
+        employer.email = request.POST.get('email')
+        employer.location = request.POST.get('location')
         employer.linkedin_url = request.POST.get('linkedin_url', '')
-        employer.company_name = request.POST.get('company_name', '')
-        employer.industry = request.POST.get('industry', '')
-        employer.company_size = request.POST.get('company_size', '')
-        employer.company_description = request.POST.get('company_description', '')
+        employer.company_name = request.POST.get('company_name')
+        employer.industry = request.POST.get('industry')
+        employer.company_size = request.POST.get('company_size')
+        employer.company_description = request.POST.get('company_description')
 
-        employer.save()
-        messages.success(request, "Your Profile Has Been Updated!")
-        return redirect('home')
+        try:
+            employer.save()
+            messages.success(request, "Your Profile Has Been Updated!")
+            return redirect('my_offers')
+        except Exception as e:
+            messages.error(request, f"Error updating profile: {e}")
 
-    # Directamente renderizar el formulario de perfil para solicitudes GET
+   
     return render(request, 'complete_employer_profile.html', {})
+
 
 
 def some_error_handling_view(request):
     return render(request, 'home.html', {})
+
+
+
+def my_offers(request):
+    context = {}
+    if request.user.is_authenticated:
+        try:
+            employer = request.user.employer
+            offers = JobPosting.objects.filter(employer=employer)
+            context['offers'] = offers
+        except Employer.DoesNotExist:
+            context['offers'] = None
+    return render(request, 'my_offers.html', context)
+
+
+
+
 

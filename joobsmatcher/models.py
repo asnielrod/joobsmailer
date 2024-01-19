@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.conf import settings
 
-# Modelo de usuario personalizado
+
 class User(AbstractUser):
     USER_TYPES = (
         ('developer', 'Developer'),
@@ -11,7 +11,7 @@ class User(AbstractUser):
     )
     user_type = models.CharField(max_length=10, choices=USER_TYPES, default='developer') 
 
-    # Cambio en los campos groups y user_permissions para evitar conflictos
+
     groups = models.ManyToManyField(
         'auth.Group',
         blank=True,
