@@ -149,7 +149,7 @@ def some_error_handling_view(request):
     return render(request, 'home.html', {})
 
 
-
+#revisar esta funcion
 def my_offers(request):
     context = {}
     if request.user.is_authenticated:
@@ -162,6 +162,27 @@ def my_offers(request):
     return render(request, 'my_offers.html', context)
 
 
+#revisar esta funcion
+def JobPosting(request):
+    if request.method == 'POST':
+        user = request.user
+        employer, created = Employer.objects.get_or_create(user=user)
+        employer.name = request.POST.get('name')
+        employer.email = request.POST.get('email')
+        employer.location = request.POST.get('location')
+        employer.linkedin_url = request.POST.get('linkedin_url', '')
+        employer.company_name = request.POST.get('company_name')
+        employer.industry = request.POST.get('industry')
+        employer.company_size = request.POST.get('company_size')
+        employer.company_description = request.POST.get('company_description')
 
+        try:
+            employer.save()
+            messages.success(request, "Your Profile Has Been Updated!")
+            return redirect('my_offers')
+        except Exception as e:
+            messages.error(request, f"Error updating profile: {e}")
 
+   
+    return render(request, 'complete_employer_profile.html', {})
 
