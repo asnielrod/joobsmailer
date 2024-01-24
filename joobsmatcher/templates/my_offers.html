@@ -1,21 +1,26 @@
-{% extends "base.html" %} 
+{% extends "base.html" %}
 
-{% block content %} 
+{% block content %}
 
 {% if user.is_authenticated %}
-
-
-<h1>
-    Your offers here
-</h1>
-
+    {% if job_postings %}
+        <h2>Mis Ofertas de Trabajo</h2>
+        {% for jobposting in job_postings %}
+            <div>
+                <h3>{{ jobposting.job_title }}</h3>
+                <p><strong>ID:</strong> {{ jobposting.id }}</p>
+                <p><strong>Descripción:</strong> {{ jobposting.job_description }}</p>
+                <p><strong>Nombre de la Empresa:</strong> {{ jobposting.company_name }}</p>
+                <p><strong>Ubicación:</strong> {{ jobposting.location }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No tienes ofertas de trabajo publicadas.</p>
+    {% endif %}
 {% else %}
-    <h1>
-        You need to be logged in to see this page
-    </h1>
-        <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
-        <p>You don't have an account? <a href="{% url 'register' %}">Register</a></p>
+    <h1>Necesitas iniciar sesión para ver esta página</h1>
+    <p>¿Ya tienes una cuenta? <a href="{% url 'login' %}">Inicia sesión</a></p>
+    <p>¿No tienes una cuenta? <a href="{% url 'register' %}">Regístrate</a></p>
 {% endif %}
 
-{% endblock content %}          
-
+{% endblock content %}

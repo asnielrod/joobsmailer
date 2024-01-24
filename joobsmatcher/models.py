@@ -82,7 +82,22 @@ class Developer(models.Model):
     def __str__(self):
         return f'Nombre: {self.name} Email: ({self.email}) Tipo de trabajo: {self.job_type}'
 
+class Employer(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='employer')
+    name = models.CharField(max_length=100)
+    email = models.EmailField(unique=True)
+    location = models.CharField(max_length=100)
+    linkedin_url = models.URLField(blank=True, null=True)
+
+    company_name = models.CharField(max_length=100)
+    industry = models.CharField(max_length=100)
+    company_size = models.CharField(max_length=100)
+    company_description = models.TextField()
+
+    def __str__(self):
+        return self.name
 class JobPosting(models.Model):
+    employer = models.ForeignKey(Employer, on_delete=models.CASCADE, related_name='job_postings')
     company_name = models.CharField(max_length=100)
     industry = models.CharField(max_length=100)
     location = models.CharField(max_length=100)
@@ -123,17 +138,4 @@ class JobRecommendations(models.Model):
     def __str__(self):
         return f"{self.job.job_title} - {self.developer.name} - {self.score}"
     
-class Employer(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='employer')
-    name = models.CharField(max_length=100)
-    email = models.EmailField(unique=True)
-    location = models.CharField(max_length=100)
-    linkedin_url = models.URLField(blank=True, null=True)
 
-    company_name = models.CharField(max_length=100)
-    industry = models.CharField(max_length=100)
-    company_size = models.CharField(max_length=100)
-    company_description = models.TextField()
-
-    def __str__(self):
-        return self.name

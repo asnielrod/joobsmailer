@@ -105,7 +105,7 @@ def complete_developer_profile(request):
 
         developer.save()
         messages.success(request, "Your Profile Has Been Updated!")
-        return redirect('home.html')
+        return redirect('home')
     else:
         context = {
             'programming_languages': ProgrammingLanguage.objects.all(),
@@ -149,21 +149,23 @@ def some_error_handling_view(request):
     return render(request, 'home.html', {})
 
 
-#revisar esta funcion
+#esta funcion me devuelve los trabajos que he publicado
 def my_offers(request):
     context = {}
     if request.user.is_authenticated:
         try:
             employer = request.user.employer
-            offers = JobPosting.objects.filter(employer=employer)
-            context['offers'] = offers
+            job_postings = JobPosting.objects.filter(employer=employer)
+            context['job_postings'] = job_postings
         except Employer.DoesNotExist:
-            context['offers'] = None
+            context['job_postings'] = None
+
     return render(request, 'my_offers.html', context)
 
 
+
 #revisar esta funcion
-def JobPosting(request):
+def create_job_posting(request):
     if request.method == 'POST':
         user = request.user
         employer, created = Employer.objects.get_or_create(user=user)
