@@ -1,26 +1,28 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block content %} {% if user.is_authenticated %} 
+<div class="d-flex justify-content-between align-items-center mb-4">
+<h2>Mis Ofertas de Trabajo</h2>
+<a href="#" class="btn btn-secondary">Crear oferta</a>
+</div>
+<div class="row">
+{% for jobposting in job_postings %}
+<div class="col-md-3 col-xs-6">
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title"></h5><strong>Puesto:</strong> {{ jobposting.job_title }}</h5>
+      <p class="card-text"><strong>Compañia:</strong> {{ jobposting.company_name }}</p>
+      <p class="card-text"><strong>Rango Salarial:</strong> {{ jobposting.salary_range }}</p>
+      <p class="card-text"><strong>Descripción:</strong>  {{ jobposting.job_description }}</p>
+      <a href="#" class="btn btn-primary">Ver oferta</a>
+    </div>
+  </div>
+</div>
+ {% empty %}
+ <p>No tienes ofertas de trabajo publicadas.</p>
+{% endfor %}</div>{% else %}
 
-{% block content %}
+<p>¿Ya tienes una cuenta? <a href="{% url 'login' %}">Inicia sesión</a></p>
+<p>¿No tienes una cuenta? <a href="{% url 'register' %}">Regístrate</a></p>
 
-{% if user.is_authenticated %}
-    {% if job_postings %}
-        <h2>Mis Ofertas de Trabajo</h2>
-        {% for jobposting in job_postings %}
-            <div>
-                <h3>{{ jobposting.job_title }}</h3>
-                <p><strong>ID:</strong> {{ jobposting.id }}</p>
-                <p><strong>Descripción:</strong> {{ jobposting.job_description }}</p>
-                <p><strong>Nombre de la Empresa:</strong> {{ jobposting.company_name }}</p>
-                <p><strong>Ubicación:</strong> {{ jobposting.location }}</p>
-            </div>
-        {% endfor %}
-    {% else %}
-        <p>No tienes ofertas de trabajo publicadas.</p>
-    {% endif %}
-{% else %}
-    <h1>Necesitas iniciar sesión para ver esta página</h1>
-    <p>¿Ya tienes una cuenta? <a href="{% url 'login' %}">Inicia sesión</a></p>
-    <p>¿No tienes una cuenta? <a href="{% url 'register' %}">Regístrate</a></p>
-{% endif %}
-
+{% endif %} 
 {% endblock content %}
+```
