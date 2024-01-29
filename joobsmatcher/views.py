@@ -165,10 +165,27 @@ def my_offers(request):
 
 
 #revisar esta funcion
-def create_job_posting(request):
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Employer, JobPosting  # Asegúrate de importar JobPosting
+from datetime import datetime
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Employer, JobPosting, ProgrammingLanguage, Framework, ToolSystem, DatabaseKnowledge
+from datetime import datetime
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Employer, JobPosting, ProgrammingLanguage, Framework, ToolSystem, DatabaseKnowledge
+from datetime import datetime
+
+def jobposting(request):
     if request.method == 'POST':
         user = request.user
         employer, created = Employer.objects.get_or_create(user=user)
+
+        # Actualiza la información del empleador
         employer.name = request.POST.get('name')
         employer.email = request.POST.get('email')
         employer.location = request.POST.get('location')
@@ -178,13 +195,71 @@ def create_job_posting(request):
         employer.company_size = request.POST.get('company_size')
         employer.company_description = request.POST.get('company_description')
 
+        # Crear o actualizar el JobPosting
+        job_posting, created = JobPosting.objects.get_or_create(employer=employer)
+
+        # Actualizar los atributos de JobPosting
+        job_posting.company_name = request.POST.get('company_name')
+        job_posting.industry = request.POST.get('industry')
+        job_posting.location = request.POST.get('location')
+        job_posting.job_title = request.POST.get('job_title')
+        job_posting.job_description = request.POST.get('job_description')
+        job_posting.employment_type = request.POST.get('employment_type')
+
+        # Manejo de campos Many-to-Many para required_languages
+        languages_data = request.POST.getlist('required_languages')
+        job_posting.required_languages.clear()
+        for lang_id in languages_data:
+            language = ProgrammingLanguage.objects.get(id=lang_id)
+            job_posting.required_languages.add(language)
+
+        # Manejo de campos Many-to-Many para required_frameworks
+        frameworks_data = request.POST.getlist('required_frameworks')
+        job_posting.required_frameworks.clear()
+        for framework_id in frameworks_data:
+            framework = Framework.objects.get(id=framework_id)
+            job_posting.required_frameworks.add(framework)
+
+        # Manejo de campos Many-to-Many para required_tools_systems
+        tools_systems_data = request.POST.getlist('required_tools_systems')
+        job_posting.required_tools_systems.clear()
+        for tool_system_id in tools_systems_data:
+            tool_system = ToolSystem.objects.get(id=tool_system_id)
+            job_posting.required_tools_systems.add(tool_system)
+
+        # Manejo de campos Many-to-Many para required_database_knowledge
+        database_knowledge_data = request.POST.getlist('required_database_knowledge')
+        job_posting.required_database_knowledge.clear()
+        for db_knowledge_id in database_knowledge_data:
+            database_knowledge = DatabaseKnowledge.objects.get(id=db_knowledge_id)
+            job_posting.required_database_knowledge.add(database_knowledge)
+
+        # Actualizar otros campos
+        job_posting.required_experience = request.POST.get('required_experience')
+        job_posting.project_type_experience = request.POST.get('project_type_experience')
+        job_posting.required_education_level = request.POST.get('required_education_level')
+        job_posting.soft_skills_required = request.POST.get('soft_skills_required')
+        job_posting.languages_required = request.POST.get('languages_required', '')
+        job_posting.additional_skills = request.POST.get('additional_skills', '')
+
+        job_posting.salary_range = request.POST.get('salary_range')
+        job_posting.benefits = request.POST.get('benefits')
+        job_posting.professional_growth_opportunities = request.POST.get('professional_growth_opportunities')
+        job_posting.interview_process = request.POST.get('interview_process')
+        job_posting.contact_email = request.POST.get('contact_email')
+
+        # Convertir la fecha de texto a objeto datetime y guardarla
+        application_deadline_str = request.POST.get('application_deadline')
+        if application_deadline_str:
+            job_posting.application_deadline = datetime.strptime(application_deadline_str, '%Y-%m-%d')
+
         try:
             employer.save()
-            messages.success(request, "Your Profile Has Been Updated!")
-            return redirect('my_offers')
+            job_posting.save()
+            messages.success(request, "Your Job Posting Has Been Created/Updated!")
+            return redirect('some_view')  # Cambia 'some_view' al nombre de tu vista deseada
         except Exception as e:
-            messages.error(request, f"Error updating profile: {e}")
+            messages.error(request, f"Error creating/updating job posting: {e}")
 
-   
-    return render(request, 'complete_employer_profile.html', {})
+    return render(request, 'jobposting.html', {})
 

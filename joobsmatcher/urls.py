@@ -9,6 +9,7 @@ urlpatterns = [
     path('complete_developer_profile/', views.complete_developer_profile, name='complete_developer_profile'),
     path('complete_employer_profile/', views.complete_employer_profile, name='complete_employer_profile'),
     path('home/', views.some_error_handling_view, name='some_error_handling_view'),
-    path('my_offers/', views.my_offers, name='my_offers')  
+    path('my_offers/', views.my_offers, name='my_offers'),  
+    path('jobposting/', views.jobposting, name='jobposting'),
     
 ]
