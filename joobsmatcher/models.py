@@ -2,13 +2,10 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.conf import settings
+from .user_types import USER_TYPES
 
 
 class User(AbstractUser):
-    USER_TYPES = (
-        ('developer', 'Developer'),
-        ('employer', 'Employer'),
-    )
     user_type = models.CharField(max_length=10, choices=USER_TYPES, default='developer') 
 
 
