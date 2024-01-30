@@ -5,6 +5,10 @@ from .forms import SignUpForm
 from .models import JobRecommendations, Developer, JobPosting
 from django.contrib.auth import get_user_model
 from .models import ProgrammingLanguage, Framework, ToolSystem, DatabaseKnowledge, Developer, Employer
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+from .decorators import employer_required, developer_required
+
 
 User = get_user_model()
 
@@ -69,8 +73,8 @@ def home(request):
     return render(request, 'home.html', context)
 
 
-
-
+# decordor personalizado para verificar si el usuario es un desarrollador
+@developer_required
 def complete_developer_profile(request):
     if request.method == 'POST':
         user = request.user
@@ -150,6 +154,7 @@ def some_error_handling_view(request):
 
 
 #esta funcion me devuelve los trabajos que he publicado
+@login_required 
 def my_offers(request):
     context = {}
     if request.user.is_authenticated:
@@ -180,6 +185,9 @@ from django.contrib import messages
 from .models import Employer, JobPosting, ProgrammingLanguage, Framework, ToolSystem, DatabaseKnowledge
 from datetime import datetime
 
+
+# Mi decorador personalizado para verificar si el usuario es un empleador
+@employer_required
 def jobposting(request):
     if request.method == 'POST':
         user = request.user
